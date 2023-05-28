@@ -1,52 +1,51 @@
 version: '3'
 
 services:
+  app:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    container_name: app
+    restart: always
+    tty: true
+    volumes:
+      - ./node:/usr/src/app
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+    depends_on:
+      - db
+
   db:
     image: mysql:5.7
+    command: --innodb-use-native-aio=0
     container_name: db
     restart: always
     tty: true
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ./mysql1:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
     networks:
-      - netRudi
-
-  node:
-    build: 
-      context: ./node
-      dockerfile: Dockerfile
-    image: rudineybarbosa/node-express
-    container_name: node
-    ports:
-      - "3000:3000" 
-    volumes:
-    - ./node:/usr/src/app
-    - /usr/src/app/node_modules
-    tty: true
-    depends_on:
-      - db
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh node index.js
-    networks:
-      - netRudi
+      - backend
 
   nginx:
-    build: 
+    build:
       context: ./nginx
       dockerfile: Dockerfile
-    image: rudineybarbosa/nginx-rudi
     container_name: nginx
+    restart: always
+    tty: true
     ports:
-      - "8080:80"
-    depends_on:
-      - node
+      - 8080:80
     networks:
-      - netRudi      
+      - backend
+    depends_on:
+      - app
 
 networks:
-  netRudi:
-    name: netRudi
+  backend:
     driver: bridge

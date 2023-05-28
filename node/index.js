@@ -1,12 +1,12 @@
 const express = require('express')
 const app = express()
-const porta = 3000
+const port = 3000
 const config = {
-  host: 'db',
-  user: 'node',
-  password: 'node',
-  database: 'nodedb'
-};
+    host: 'db',
+    user: 'root',
+    password: 'root',
+    database: 'nodedb'
+}
 
 const mysql = require('mysql')
 
@@ -17,7 +17,7 @@ connection.end()
 
 
 connection = mysql.createConnection(config)
-const insert = `INSERT INTO people(name) values ('Rudiney')`
+const insert = `INSERT INTO people(name) values ('Mateus')`
 connection.query(insert)
 connection.end()
 
@@ -49,6 +49,6 @@ app.get('/', (req, resp) => {
   //resp.send("<h1>Full Cycle Rocks!</h1>");
 })
 
-app.listen(porta, ()=> {
-  console.log('Rodando na porta ' + porta)
+app.listen(port, ()=> {
+  console.log('Rodando na porta ' + port)
 })
