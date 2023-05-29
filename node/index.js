@@ -46,7 +46,6 @@ app.get('/', (req, resp) => {
   });
   connection.end()
   
-  //resp.send("<h1>Full Cycle Rocks!</h1>");
 })
 
 app.listen(port, ()=> {
